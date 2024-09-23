@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+</head>
+<body>
+    <div class="employee-box">
+        <div class="employee-info">
+            <div class="name">John</div>
+            <div class="surname">Doe</div>
+        </div>
+        <div class="action-buttons">
+            <button class="edit-days" onclick="openPopup('days')">Edit available days</button>
+            <button class="edit-hours" onclick="openPopup('hours')">Edit available hours</button>
+        </div>
+    </div>
+
+
+    <!-- Popup Modal -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p id="popup-text"></p>
+        </div>
+    </div>
+
+    
+    
+    
+    
+<script>
+        // Function to open the popup
+function openPopup(actionType) {
+    const popup = document.getElementById("popup");
+    const popupText = document.getElementById("popup-text");
+
+    // Set the popup text based on the action
+    if (actionType === 'days') {
+        popupText.textContent = "Edit available days for this employee.";
+    } else if (actionType === 'hours') {
+        popupText.textContent = "Edit available hours for this employee.";
+    }
+
+    // Show the popup
+    popup.style.display = "flex";
+}
+
+// Function to close the popup
+function closePopup() {
+    const popup = document.getElementById("popup");
+    popup.style.display = "none";
+}
+
+    </script>
+</body>
+</html>

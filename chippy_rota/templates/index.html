@@ -7,17 +7,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
 </head>
 <body>
+
+     {% for name,surname in employee_list %}
     <div class="employee-box">
         <div class="employee-info">
-            <div class="name">John</div>
-            <div class="surname">Doe</div>
+            <div class="name">{{ name }}</div>
+            <div class="surname">{{ surname }}</div>
         </div>
         <div class="action-buttons">
-            <button class="edit-days" onclick="openPopup('days')">Edit available days</button>
-            <button class="edit-hours" onclick="openPopup('hours')">Edit available hours</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this)">Edit availability</button>
         </div>
     </div>
-
+    {% endfor %}
 
     <!-- Popup Modal -->
     <div id="popup" class="popup">
@@ -32,17 +33,31 @@
     
     
 <script>
+    // Function to get employee details from name and return them
+async function get_details(employee_name){
+    console.log(employee_name)
+    const xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200){
+            document.getElementById("popup-text").innerHTML = this.responseText
+            console.log(this.responseText)
+        }
+    }
+    const json = {
+        "employee_name":employee_name
+    }
+    xhttp.open("POST", "/get_employee_details", true)
+    xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
+    xhttp.send(JSON.stringify(json))
+}
+
         // Function to open the popup
-function openPopup(actionType) {
+function openPopup(el) {
+    const employee_name = el.name
     const popup = document.getElementById("popup");
     const popupText = document.getElementById("popup-text");
 
-    // Set the popup text based on the action
-    if (actionType === 'days') {
-        popupText.textContent = "Edit available days for this employee.";
-    } else if (actionType === 'hours') {
-        popupText.textContent = "Edit available hours for this employee.";
-    }
+    get_details(employee_name)
 
     // Show the popup
     popup.style.display = "flex";

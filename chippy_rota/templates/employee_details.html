@@ -1,0 +1,25 @@
+<div>
+    <h3 style="text-align: center;">Current shifts for {{ name }}</h3>
+
+    <ol>
+    {% for day,start_time,end_time in shifts%}
+        <li>{{ name }} is working on {{ day }} from {{start_time}} to {{ end_time }}.</li>
+    {% endfor %}
+    </ol>
+
+    <form action="/create_shift" method="post">
+        <input type="hidden" name="name" id="name" value="{{ name }}">
+        <input type="submit" value="Create blank shift">
+    </form>
+
+    <form action="/update_rota" method="post">
+        <label for="date">Date</label>
+        <input type="date" name="date" id="date"> <br>
+        <label for="from_time">From hour:</label>
+        <input type="time" name="from_time" id="from_time"> <br>
+        <label for="to_time">To hour:</label>
+        <input type="time" name="to_time" id="to_time"><br>
+        <input type="hidden" name="employee_name" id="employee_name" value="{{ name }}">
+        <input type="submit" value="Submit changes">
+    </form>
+</div>

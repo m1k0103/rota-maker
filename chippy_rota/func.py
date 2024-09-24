@@ -8,7 +8,7 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
         cursor.execute("INSERT INTO employees(name,surname) VALUES (?,?)", [name,surname])
-        cursor.execute("INSERT INTO availability(employee_id, day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none","none","none"])
+        cursor.execute("INSERT INTO shifts(employee_id, day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none","none","none"])
         con.commit()
         con.close()
         return True
@@ -23,14 +23,14 @@ class Database:
     def get_shift_info(self,name):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        shift_data = [list(tup) for tup in cursor.execute("SELECT shift_id,day,start_time,end_time FROM availability WHERE employee_id=(SELECT eid FROM employees WHERE name=?)",[name]).fetchall()]
+        shift_data = [list(tup) for tup in cursor.execute("SELECT shift_id,day,start_time,end_time FROM shifts WHERE employee_id=(SELECT eid FROM employees WHERE name=?)",[name]).fetchall()]
         con.close()
         return shift_data
     
-    def update_rota(self,id,name,to_time,from_time,day):
+    def update_shifts(self,id,name,to_time,from_time,day):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("UPDATE availability SET day=?,start_time=?,end_time=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?) AND shift_id=?",[day,from_time,to_time,name,id])
+        cursor.execute("UPDATE shifts SET day=?,start_time=?,end_time=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?) AND shift_id=?",[day,from_time,to_time,name,id])
         con.commit()
         con.close()
         return True
@@ -38,8 +38,11 @@ class Database:
     def create_blank_shift(self,name):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("INSERT INTO availability(employee_id,day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none,","none","none"])
+        cursor.execute("INSERT INTO shifts(employee_id,day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none,","none","none"])
         con.commit()
         con.close()
 
+    def add_availability(self,name):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()     
 

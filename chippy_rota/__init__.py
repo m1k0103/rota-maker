@@ -9,7 +9,7 @@ def get_db_name():
         return DB_NAME
     
 def get_admin_details():
-    with open("config.yaml") as f:
+    with open("config.yaml", "r") as f:
         conf = yaml.load(f, Loader=yaml.FullLoader)
         ADMIN_USERNAME = conf["admin_username"]
         ADMIN_PASSWORD = conf["admin_password"]
@@ -18,6 +18,17 @@ def get_admin_details():
 
 
 def start():
+    #creates the config.yaml file
+    if "config.yaml" not in os.listdir():
+        data = dict(admin_username='ADMIN',
+                    admin_surname='admin',
+                    admin_password='AdminPassword1234',
+                    database_name='database.db')
+        with open("config.yaml", "w+") as cfg:
+            yaml.dump(data,cfg,default_flow_style=False)
+    else:
+        pass
+
     DB_NAME = get_db_name()
 
     if DB_NAME not in os.listdir():
@@ -37,6 +48,7 @@ def start():
                        day TEXT,
                        start_time TEXT,
                        end_time TEXT,
+                       shift_id INTEGER PRIMARY KEY,
                        FOREIGN KEY (employee_id) REFERENCES employees(eid)
                        )""")
         con.commit()
@@ -50,4 +62,4 @@ def start():
         print("db created")
 
     from chippy_rota.routes import app
-    app.run(host="0.0.0.0", port="80",debug=True)
+    app.run(host="0.0.0.0", port="5000",debug=True)

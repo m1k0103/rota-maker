@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
 </head>
 <body>
+    
+    <h1><u>Employee Management</u></h1>
 
      {% for name,surname in employee_list %}
     <div class="employee-box">
@@ -15,7 +17,8 @@
             <div class="surname">{{ surname }}</div>
         </div>
         <div class="action-buttons">
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this)">Edit availability</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'shifts')">Edit shifts</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'availability')">Edit availability</button>
         </div>
     </div>
     {% endfor %}
@@ -28,7 +31,6 @@
         </div>
     </div>
 
-    
     
     
     
@@ -46,21 +48,52 @@ async function get_details(employee_name){
     const json = {
         "employee_name":employee_name
     }
-    xhttp.open("POST", "/get_employee_details", true)
+    xhttp.open("POST", "/get_employee_shifts", true)
     xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
     xhttp.send(JSON.stringify(json))
 }
 
+async function availability(employee_name){
+    console.log(employee_name)
+    const xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function(){
+        if (this.readyState == 4 && this.status == 200){ // if successful
+            document.getElementById("popup-text").innerHTML = this.responseText
+        }
+    }
+    const json = {"employee_name":employee_name}
+    xhttp.open("POST", "/add_availability", true)
+    xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
+    xhttp.send(JSON.stringify(json))
+}
+
+
         // Function to open the popup
-function openPopup(el) {
-    const employee_name = el.name
-    const popup = document.getElementById("popup");
-    const popupText = document.getElementById("popup-text");
+function openPopup(el, type) {
+    console.log(type)
+    if (type == 'shifts'){
+        const employee_name = el.name
+        const popup = document.getElementById("popup");
+        const popupText = document.getElementById("popup-text");
+        get_details(employee_name)
+        // Show the popup
+        popup.style.display = "flex";
+    }
+    else if (type == 'availability'){
+        const employee_name = el.name
+        const popup = document.getElementById("popup");
+        const popupText = document.getElementById("popup-text");
+        availability(employee_name)
+        // Show the popup
+        popup.style.display = "flex";
+    }
+    else{
+        const popup = document.getElementById("popup")
+        const popupText =document.getElementById("popup-text")
+        popupText.innerText = "lol error"
+        popup.style.display = "flex"
+    }
 
-    get_details(employee_name)
-
-    // Show the popup
-    popup.style.display = "flex";
 }
 
 // Function to close the popup
@@ -70,7 +103,7 @@ function closePopup() {
 }
 
 function show_edit_menu(id){
-    document.getElementById("update_rota_menu").style.display = "flex"
+    document.getElementById("update_shifts_menu").style.display = "flex"
     document.getElementById("form_shift_id").value = id
 }
 

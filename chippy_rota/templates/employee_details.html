@@ -1,25 +1,41 @@
 <div>
     <h3 style="text-align: center;">Current shifts for {{ name }}</h3>
 
-    <ol>
-    {% for day,start_time,end_time in shifts%}
-        <li>{{ name }} is working on {{ day }} from {{start_time}} to {{ end_time }}.</li>
-    {% endfor %}
-    </ol>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Day</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Edit</th>
+        </tr>
+        {% for id,day,start_time,end_time in shifts%}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ day }}</td>
+            <td>{{ start_time }}</td>
+            <td>{{ end_time }}</td>
+            <td><input type="submit" value="Edit" onclick='show_edit_menu("{{ id }}")'></td>   
+        </tr>
+        {% endfor %}  
+    </table>
 
     <form action="/create_shift" method="post">
         <input type="hidden" name="name" id="name" value="{{ name }}">
         <input type="submit" value="Create blank shift">
     </form>
 
-    <form action="/update_rota" method="post">
-        <label for="date">Date</label>
-        <input type="date" name="date" id="date"> <br>
-        <label for="from_time">From hour:</label>
-        <input type="time" name="from_time" id="from_time"> <br>
-        <label for="to_time">To hour:</label>
-        <input type="time" name="to_time" id="to_time"><br>
-        <input type="hidden" name="employee_name" id="employee_name" value="{{ name }}">
-        <input type="submit" value="Submit changes">
-    </form>
+    <div id="update_rota_menu" style="display: none;">
+        <form action="/update_rota" method="post">
+            <label for="date">Date</label>
+            <input type="date" name="date" id="date"> <br>
+            <label for="from_time">From hour:</label>
+            <input type="time" name="from_time" id="from_time"> <br>
+            <label for="to_time">To hour:</label>
+            <input type="time" name="to_time" id="to_time"><br>
+            <input type="hidden" name="employee_name" id="employee_name" value="{{ name }}">
+            <input type="hidden" name="shift_id" id="form_shift_id" value="{{ id }}">
+            <input type="submit" value="Submit changes">
+        </form>
+    </div>
 </div>

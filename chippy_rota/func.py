@@ -23,14 +23,14 @@ class Database:
     def get_shift_info(self,name):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        shift_data = [list(tup) for tup in cursor.execute("SELECT day,start_time,end_time FROM availability WHERE employee_id=(SELECT eid FROM employees WHERE name=?)",[name]).fetchall()]
+        shift_data = [list(tup) for tup in cursor.execute("SELECT shift_id,day,start_time,end_time FROM availability WHERE employee_id=(SELECT eid FROM employees WHERE name=?)",[name]).fetchall()]
         con.close()
         return shift_data
     
-    def update_rota(self,name,to_time,from_time,day):
+    def update_rota(self,id,name,to_time,from_time,day):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("UPDATE availability SET day=?,start_time=?,end_time=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?)",[day,from_time,to_time,name])
+        cursor.execute("UPDATE availability SET day=?,start_time=?,end_time=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?) AND shift_id=?",[day,from_time,to_time,name,id])
         con.commit()
         con.close()
         return True

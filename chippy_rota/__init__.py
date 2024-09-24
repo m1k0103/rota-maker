@@ -43,12 +43,23 @@ def start():
                        name TEXT,
                        surname TEXT
                        )""")
-        cursor.execute("""CREATE TABLE availability(
+        cursor.execute("""CREATE TABLE shifts(
                        employee_id INT,
                        day TEXT,
                        start_time TEXT,
                        end_time TEXT,
                        shift_id INTEGER PRIMARY KEY,
+                       FOREIGN KEY (employee_id) REFERENCES employees(eid)
+                       )""")
+        cursor.execute("""CREATE TABLE availability(
+                       employee_id INT,
+                       monday TEXT,
+                       tuesday TEXT,
+                       wednesday TEXT,
+                       thursday TEXT,
+                       friday TEXT,
+                       saturday TEXT,
+                       sunday TEXT,
                        FOREIGN KEY (employee_id) REFERENCES employees(eid)
                        )""")
         con.commit()

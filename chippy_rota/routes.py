@@ -1,4 +1,4 @@
-from flask import Flask, request, session, render_template, url_for, jsonify, render_template_string, redirect
+from flask import Flask, request, session, render_template, url_for, redirect
 from chippy_rota.func import Database
 from chippy_rota.__init__ import get_db_name
 
@@ -25,11 +25,12 @@ def get_employee_details():
 
 @app.route("/update_rota",methods=["POST"])
 def update_rota():
+    shift_id = request.form["shift_id"]
     from_time = request.form["from_time"]
     to_time = request.form["to_time"]
     date = request.form["date"]
     name = request.form["employee_name"]
-    DB.update_rota(name=name,to_time=to_time,from_time=from_time,day=date)
+    DB.update_rota(id=shift_id,name=name,to_time=to_time,from_time=from_time,day=date)
     return redirect(url_for("index"))
 
 @app.route("/create_shift", methods=["POST"])

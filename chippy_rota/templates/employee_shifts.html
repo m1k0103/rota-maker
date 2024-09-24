@@ -3,7 +3,7 @@
 
     <table>
         <tr>
-            <th>Name</th>
+            <th>Shift No.</th>
             <th>Day</th>
             <th>Start</th>
             <th>End</th>
@@ -11,7 +11,7 @@
         </tr>
         {% for id,day,start_time,end_time in shifts%}
         <tr>
-            <td>{{ name }}</td>
+            <td>{{ id }}</td>
             <td>{{ day }}</td>
             <td>{{ start_time }}</td>
             <td>{{ end_time }}</td>
@@ -20,14 +20,14 @@
         {% endfor %}  
     </table>
 
-    <form action="/create_shift" method="post">
+    <form action="/create_shift" method="post" style="padding-bottom: 8px;">
         <input type="hidden" name="name" id="name" value="{{ name }}">
         <input type="submit" value="Create blank shift">
     </form>
 
-    <div id="update_rota_menu" style="display: none;">
-        <form action="/update_rota" method="post">
-            <label for="date">Date</label>
+    <div id="update_shifts_menu" style="display: none; text-align:left;">
+        <form action="/update_shifts" method="post">
+            <label for="date">Date:</label>
             <input type="date" name="date" id="date"> <br>
             <label for="from_time">From hour:</label>
             <input type="time" name="from_time" id="from_time"> <br>

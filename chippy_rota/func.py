@@ -16,7 +16,9 @@ class Database:
     def remove_employee(self,name,surname):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("DELETE FROM employees WHERE name=? AND surname=?",[name,surname])
+        cursor.execute("DELETE FROM shifts WHERE employee_id=(SELECT eid FROM employees WHERE name=? AND surname=?)",[name,surname]) # deletes from shifts table
+        cursor.execute("DELETE FROM availability WHERE employee_id=(SELECT eid FROM employees WHERE name=? AND surname=?)",[name,surname]) # deletes from availability table
+        cursor.execute("DELETE FROM employees WHERE name=? AND surname=?",[name,surname]) # then finally deletes from employee table
         con.commit()
         con.close()
         return True

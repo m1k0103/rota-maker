@@ -23,14 +23,21 @@
     </div>
     {% endfor %}
 
-    <!-- Popup Modal -->
-    <div id="popup" class="popup">
-        <div class="popup-content">
+    <!-- Shifts Popup -->
+    <div id="popup-shifts" class="popup-shifts">
+        <div class="popup-content-shifts">
             <span class="close" onclick="closePopup()">&times;</span>
-            <p id="popup-text"></p>
+            <p id="popup-text-shifts"></p>
+        </div>
+
+    </div>
+    <!-- Availibility popup -->
+    <div id="popup-availability" class="popup-availability">
+        <div class="popup-content-availability">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p id="popup-text-availability"></p>
         </div>
     </div>
-
     
     
     
@@ -41,7 +48,7 @@ async function get_details(employee_name){
     const xhttp = new XMLHttpRequest()
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200){
-            document.getElementById("popup-text").innerHTML = this.responseText
+            document.getElementById("popup-text-shifts").innerHTML = this.responseText
             console.log(this.responseText)
         }
     }
@@ -58,7 +65,7 @@ async function availability(employee_name){
     const xhttp = new XMLHttpRequest()
     xhttp.onreadystatechange = function(){
         if (this.readyState == 4 && this.status == 200){ // if successful
-            document.getElementById("popup-text").innerHTML = this.responseText
+            document.getElementById("popup-text-availability").innerHTML = this.responseText
         }
     }
     const json = {"employee_name":employee_name}
@@ -73,33 +80,28 @@ function openPopup(el, type) {
     console.log(type)
     if (type == 'shifts'){
         const employee_name = el.name
-        const popup = document.getElementById("popup");
-        const popupText = document.getElementById("popup-text");
+        const popup = document.getElementById("popup-shifts");
+        const popupText = document.getElementById("popup-text-shifts");
         get_details(employee_name)
         // Show the popup
         popup.style.display = "flex";
     }
     else if (type == 'availability'){
         const employee_name = el.name
-        const popup = document.getElementById("popup");
-        const popupText = document.getElementById("popup-text");
+        const popup = document.getElementById("popup-availability");
+        const popupText = document.getElementById("popup-text-availability");
         availability(employee_name)
         // Show the popup
         popup.style.display = "flex";
     }
-    else{
-        const popup = document.getElementById("popup")
-        const popupText =document.getElementById("popup-text")
-        popupText.innerText = "lol error"
-        popup.style.display = "flex"
-    }
-
 }
 
 // Function to close the popup
 function closePopup() {
-    const popup = document.getElementById("popup");
-    popup.style.display = "none";
+    const popup = document.getElementById("popup-shifts")
+    popup.style.display = "none"
+    const popup2 = document.getElementById("popup-availability")
+    popup2.style.display = "none"
 }
 
 function show_edit_menu(id){

@@ -15,6 +15,20 @@ def index():
         all_employees = DB.get_all_employees()        
         return render_template("index.html", employee_list=all_employees)
 
+@app.route("/make_employee",methods=["POST"])
+def make_employee():
+    name = request.form["name"]
+    surname = request.form["surname"]
+    DB.add_employee(name,surname)
+    return redirect(url_for("index"))
+
+@app.route("/remove_employee",methods=["POST"])
+def remove_employee():
+    name = request.form["name"]
+    surname = request.form["surname"]
+    DB.remove_employee(name,surname)
+    return redirect(url_for("index"))
+
 @app.route("/get_employee_shifts", methods=["POST"])
 def get_employee_shifts():
     rjson = request.json
@@ -39,6 +53,12 @@ def create_shift():
     DB.create_blank_shift(name)
     return redirect(url_for("index"))
 
+@app.route("/remove_shift", methods=["POST"])
+def remove_shift():
+    shift_id = request.json["shift_id"]
+    DB.remove_shift(shift_id)
+    return redirect(url_for("index"))
+
 @app.route("/add_availability", methods=["POST"])
 def add_availability():
     rjson = request.json
@@ -49,6 +69,13 @@ def add_availability():
 def update_availability():
     days = [request.form["mon"],request.form["tue"],request.form["wed"],request.form["thu"],request.form["fri"],request.form["sat"]]
     hours = [request.form["monRange"],request.form["tueRange"],request.form["wedRange"],request.form["thuRange"],request.form["friRange"],request.form["satRange"]]
+    selected_days = []
+    for day in days:
+        if day == True:
+            selected_days.append([index(day),day,hours[index(day)]])
+    print(selected_days) # CARRY ON FROM HERE
+
+
 
 def generate_rota_message():
     pass

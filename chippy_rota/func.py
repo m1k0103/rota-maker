@@ -13,6 +13,14 @@ class Database:
         con.close()
         return True
  
+    def remove_employee(self,name,surname):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        cursor.execute("DELETE FROM employees WHERE name=? AND surname=?",[name,surname])
+        con.commit()
+        con.close()
+        return True
+
     def get_all_employees(self):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
@@ -39,6 +47,13 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
         cursor.execute("INSERT INTO shifts(employee_id,day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none,","none","none"])
+        con.commit()
+        con.close()
+    
+    def remove_shift(self,shift_id):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()  
+        cursor.execute("DELETE FROM shifts WHERE shift_id=?",[shift_id])
         con.commit()
         con.close()
 

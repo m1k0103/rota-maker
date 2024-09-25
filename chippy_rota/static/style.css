@@ -90,7 +90,7 @@ button:hover {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    width: 600px;
+    width: 650px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     position: relative;
 }
@@ -117,4 +117,37 @@ th{
 table{
     padding:3px;
     padding-bottom: 50px;
+}
+.make-employee-container{
+    border: 1px black solid;
+    margin-left: 2em;
+    margin-bottom: 3px;
+    padding: 1em;
+}
+.make-employee-title{
+    text-align: center;
+    margin-top: 0;
+}
+.make-employee-labels{
+    font-size: small;
+}
+.make-employee-input{
+    width: 90px;
+}
+.delete-employee-container{
+    border: 1px black solid;
+    margin-left: 1em;
+    margin-bottom: 3px;
+    padding: 1em;
+    
+}
+.delete-employee-title{
+    text-align: center;
+    margin-top: 0;
+}
+.delete-employee-labels{
+    font-size: small;
+}
+.delete-employee-input{
+    width: 90px;
 }

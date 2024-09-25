@@ -15,7 +15,8 @@
             <td>{{ day }}</td>
             <td>{{ start_time }}</td>
             <td>{{ end_time }}</td>
-            <td><input type="submit" value="Edit" onclick='show_edit_menu("{{ id }}")'></td>   
+            <td><input type="submit" value="Edit" onclick='show_edit_menu("{{ id }}")'></td>
+            <td><input type="submit" value="Delete" onclick="delete_shift('{{ id }}')"></td>
         </tr>
         {% endfor %}  
     </table>

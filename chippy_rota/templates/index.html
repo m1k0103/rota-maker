@@ -7,8 +7,33 @@
     <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
 </head>
 <body>
-    
-    <h1><u>Employee Management</u></h1>
+    <div style="display: flex;">
+        
+        <h1><u>Employee Management</u></h1> <!-- Main heading -->
+        <div class="make-employee-container"> <!-- Create Employee -->
+            <h4 class="make-employee-title">Add new employee:</h4> <!-- Next to title -->
+            <form action="/make_employee" method="post">
+                <label class="make-employee-labels" for="name">Name:</label>
+                <input class="make-employee-input" type="text" id="name" name="name">
+                <label class="make-employee-labels" for="surname">Surname:</label>
+                <input class="make-employee-input" type="text" id="surname" name="surname">
+                <input type="Submit" value="Add">
+            </form>
+        </div>
+        <div class="delete-employee-container"> <!-- Delete Employee -->
+            <h4 class="delete-employee-title">Remove employee:</h4>
+            <form action="/remove_employee" method="post">
+                <label class="delete-employee-labels" for="name">Name:</label>
+                <input class="delete-employee-input" type="text" id="name" name="name">
+                <label class="delete-employee-labels" for="surname">Surname:</label>
+                <input class="delete-employee-input" type="text" id="surname" name="surname">
+                <input type="Submit" value="Remove">
+            </form>
+        </div>
+
+
+    </div>
+
 
      {% for name,surname in employee_list %}
     <div class="employee-box">
@@ -108,7 +133,21 @@ function show_edit_menu(id){
     document.getElementById("update_shifts_menu").style.display = "flex"
     document.getElementById("form_shift_id").value = id
 }
-
+function toggle_option(day){
+    document.getElementById(`${day}Start`).disabled = !document.getElementById(`${day}Start`).disabled
+    document.getElementById(`${day}End`).disabled = !document.getElementById(`${day}End`).disabled
+}
+function delete_shift(id){
+    const xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function(){
+        if (this.readyState == 4 && this.status == 200){
+            console.log(`shift with id ${id} deleted`)
+        }
+    }
+    xhttp.open("POST","/delete_shift",true)
+    const json = {"shift_id":id}
+    xhttp.send(JSON.stringify(json))
+}
 
     </script>
 </body>

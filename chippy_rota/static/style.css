@@ -151,3 +151,15 @@ table{
 .delete-employee-input{
     width: 90px;
 }
+.availability-table-container{
+    display: flex;
+    justify-content: right;
+    padding-right: 5em;
+}
+.availability-table{
+    border: 3px black solid;
+}
+
+.availability-table-element{
+    width:100px;
+}

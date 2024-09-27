@@ -35,7 +35,7 @@
     </div>
 
 
-     {% for name,surname in employee_list %}
+     {% for name,surname,max_shifts in employee_list %}
     <div class="employee-box">
         <div class="employee-info">
             <div class="name">{{ name }}</div>
@@ -44,11 +44,12 @@
         <div class="action-buttons">
             <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'shifts')">Edit shifts</button>
             <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'availability')">Edit availability</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'max_shifts','{{ max_shifts }}')">Edit max shifts</button>
         </div>
     </div>
     {% endfor %}
 
-
+    
     <div class="availability-table-container"></div>
         <table class="availability-table">
             <tr class="availability-table-element">
@@ -60,15 +61,17 @@
                 <th class="availability-table-element">Friday</th>
                 <th class="availability-table-element">Saturday</th>
             </tr>
+            {% for name,surname,max_shifts in employee_list %}
             <tr>
-                <td>eid</td>
-                <td>def</td>
+                <td>{{name}} {{surname}}</td>
+                <td></td>
                 <td>geh</td>
                 <td>geh</td>
                 <td>geh</td>
                 <td>geh</td>
                 <td>geh</td>
             </tr>
+            {%endfor%}
         </table>
     </div>
 
@@ -88,12 +91,19 @@
             <p id="popup-text-availability"></p>
         </div>
     </div>
+    <!-- Availibility popup -->
+    <div id="popup-max-shifts" class="popup-shifts">
+        <div class="popup-content-shifts">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p id="popup-text-max-shifts"></p>
+        </div>
+    </div>
     
     
     
 <script>
     // Function to get employee details from name and return them
-async function get_details(employee_name){
+function get_details(employee_name){
     console.log(employee_name)
     const xhttp = new XMLHttpRequest()
     xhttp.onreadystatechange = function() {
@@ -110,7 +120,7 @@ async function get_details(employee_name){
     xhttp.send(JSON.stringify(json))
 }
 
-async function availability(employee_name){
+function availability(employee_name){
     console.log(employee_name)
     const xhttp = new XMLHttpRequest()
     xhttp.onreadystatechange = function(){
@@ -123,13 +133,26 @@ async function availability(employee_name){
     xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
     xhttp.send(JSON.stringify(json))
 }
+function maxShifts(employee_name){
+    console.log(employee_name)
+    const xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function(){
+        if (this.readyState == 4 && this.status == 200){ // if successful
+            document.getElementById("popup-text-max-shifts").innerHTML = this.responseText
+        }
+    }
+    const json = {"employee_name":employee_name}
+    xhttp.open("POST", "/max_shifts", true)
+    xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
+    xhttp.send(JSON.stringify(json))
+}
 
 
         // Function to open the popup
-function openPopup(el, type) {
+function openPopup(el, type, max_shifts) {
     console.log(type)
+    const employee_name = el.name
     if (type == 'shifts'){
-        const employee_name = el.name
         const popup = document.getElementById("popup-shifts");
         const popupText = document.getElementById("popup-text-shifts");
         get_details(employee_name)
@@ -137,12 +160,19 @@ function openPopup(el, type) {
         popup.style.display = "flex";
     }
     else if (type == 'availability'){
-        const employee_name = el.name
         const popup = document.getElementById("popup-availability");
         const popupText = document.getElementById("popup-text-availability");
         availability(employee_name)
         // Show the popup
         popup.style.display = "flex";
+    }
+    else if (type == 'max_shifts'){
+        const popup = document.getElementById("popup-max-shifts")
+        const popupText = document.getElementById("popup-text-max-shifts")
+        maxShifts(employee_name)
+
+        popup.style.display = "flex"
+
     }
 }
 

@@ -68,13 +68,30 @@ def add_availability():
 @app.route("/update_availability", methods=["POST"])
 def update_availability():
     days = [request.form["mon"],request.form["tue"],request.form["wed"],request.form["thu"],request.form["fri"],request.form["sat"]]
-    hours = [request.form["monRange"],request.form["tueRange"],request.form["wedRange"],request.form["thuRange"],request.form["friRange"],request.form["satRange"]]
+    start = [request.form["monStart"],request.form["tueStart"],request.form["wedStart"],request.form["thuStart"],request.form["friStart"],request.form["satStart"]]
+    end = [request.form["monStart"],request.form["tueStart"],request.form["wedStart"],request.form["thuStart"],request.form["friStart"],request.form["satStart"]]
+    time_range = [f"{start[i]-end[i]}" for i in range(len(start))]
     selected_days = []
     for day in days:
         if day == True:
-            selected_days.append([index(day),day,hours[index(day)]])
+            selected_days.append([index(day),day,time_range[index(day)]])
     print(selected_days) # CARRY ON FROM HERE
+    
 
+
+
+
+@app.route("/max_shifts", methods=["POST"])
+def max_shifts():
+    if "stage2" in request.form:
+        name = request.form["name"]
+        amount = request.form["max-shifts-input"]
+        DB.update_max_shifts(name,amount)
+        return redirect(url_for("index"))
+        
+    else:
+        name = request.json["employee_name"]
+        return render_template("max_shifts.html",name=name)
 
 
 def generate_rota_message():

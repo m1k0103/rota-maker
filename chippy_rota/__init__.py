@@ -41,7 +41,8 @@ def start():
         cursor.execute("""CREATE TABLE employees(
                        eid INTEGER PRIMARY KEY,
                        name TEXT,
-                       surname TEXT
+                       surname TEXT,
+                       max_shifts INT
                        )""")
         cursor.execute("""CREATE TABLE shifts(
                        employee_id INT,
@@ -66,7 +67,7 @@ def start():
 
         # creates default admin details
         ADMIN_USER,ADMIN_SURNAME,ADMIN_PASSWORD = get_admin_details()
-        cursor.execute("INSERT INTO employees(name,surname) VALUES (?,?)", [ADMIN_USER,ADMIN_SURNAME])
+        cursor.execute("INSERT INTO employees(name,surname,max_shifts) VALUES (?,?,0)", [ADMIN_USER,ADMIN_SURNAME])
 
         con.commit()
         con.close()

@@ -80,7 +80,6 @@ def update_availability():
 
 
 
-
 @app.route("/max_shifts", methods=["POST"])
 def max_shifts():
     if "stage2" in request.form:

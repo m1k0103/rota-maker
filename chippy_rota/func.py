@@ -7,7 +7,7 @@ class Database:
     def add_employee(self,name,surname): # untested
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("INSERT INTO employees(name,surname) VALUES (?,?)", [name,surname])
+        cursor.execute("INSERT INTO employees(name,surname,max_shifts) VALUES (?,?,0)", [name,surname])
         cursor.execute("INSERT INTO shifts(employee_id, day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none","none","none"])
         con.commit()
         con.close()
@@ -26,7 +26,7 @@ class Database:
     def get_all_employees(self):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        result = [list(tup) for tup in cursor.execute("SELECT name,surname FROM employees").fetchall()]
+        result = [list(tup) for tup in cursor.execute("SELECT name,surname,max_shifts FROM employees").fetchall()]
         con.close()
         return result
 
@@ -59,7 +59,22 @@ class Database:
         con.commit()
         con.close()
 
-    def add_availability(self,name):
+    def update_availability(self,name):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()     
 
+    def update_max_shifts(self,name,new_max_amount):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        cursor.execute("UPDATE employees SET max_shifts=? WHERE name=?",[new_max_amount,name])
+        con.commit()
+        con.close()
+
+
+    def generate_shift_from_av(self,all_employee_av): # al_employee_av must be type LIST
+        # [[employee_name,employee_surname,3,"11:00-15:00","","","16:00-20:00","",""]]
+        # 2D list
+        #  - each list will be data of an employee
+        #  - index 0 will be employee name and index 1 employee surname, index 2 the max shifts to generate for the employee, 
+        #    followed by indexes 3 to 8 which will be hours from monday to saturday
+        pass

@@ -1,22 +1,22 @@
 <div>
     <h3 style="text-align: center;">Current shifts for {{ name }}</h3>
 
-    <table>
+    <table class="popup-table">
         <tr>
-            <th>Shift No.</th>
-            <th>Day</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Edit</th>
+            <th class="popup-th">Shift No.</th>
+            <th class="popup-th">Day</th>
+            <th class="popup-th">Start</th>
+            <th class="popup-th">End</th>
+            <th class="popup-th">Edit</th>
         </tr>
         {% for id,day,start_time,end_time in shifts%}
         <tr>
-            <td>{{ id }}</td>
-            <td>{{ day }}</td>
-            <td>{{ start_time }}</td>
-            <td>{{ end_time }}</td>
-            <td><input type="submit" value="Edit" onclick='show_edit_menu("{{ id }}")'></td>
-            <td><input type="submit" value="Delete" onclick="delete_shift('{{ id }}')"></td>
+            <td class="popup-td">{{ id }}</td>
+            <td class="popup-td">{{ day }}</td>
+            <td class="popup-td">{{ start_time }}</td>
+            <td class="popup-td">{{ end_time }}</td>
+            <td class="popup-td"><input type="submit" value="Edit" onclick='show_edit_menu("{{ id }}")'></td>
+            <td class="popup-td"><input type="submit" value="Delete" onclick="delete_shift('{{ id }}')"></td>
         </tr>
         {% endfor %}  
     </table>

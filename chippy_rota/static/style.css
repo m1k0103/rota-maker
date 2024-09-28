@@ -107,14 +107,14 @@ button:hover {
     font-size: 24px;
     cursor: pointer;
 }
-td{
+.popup-td{
     border-bottom: 1px solid #ddd;
     border-left: 1px solid #ddd;
 }
-th{
+.popup-th{
     border-bottom: 3px solid black;
 }
-table{
+.popup-table{
     padding:3px;
     padding-bottom: 50px;
 }
@@ -158,8 +158,9 @@ table{
 }
 .availability-table{
     border: 3px black solid;
+    text-align: center;
 }
-
 .availability-table-element{
     width:100px;
+    border-bottom: 1px black solid;
 }

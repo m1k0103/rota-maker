@@ -54,13 +54,13 @@ def start():
                        )""")
         cursor.execute("""CREATE TABLE availability(
                        employee_id INT,
-                       monday TEXT,
-                       tuesday TEXT,
-                       wednesday TEXT,
-                       thursday TEXT,
-                       friday TEXT,
-                       saturday TEXT,
-                       sunday TEXT,
+                       mon TEXT,
+                       tue TEXT,
+                       wed TEXT,
+                       thu TEXT,
+                       fri TEXT,
+                       sat TEXT,
+                       sun TEXT,
                        FOREIGN KEY (employee_id) REFERENCES employees(eid)
                        )""")
         con.commit()

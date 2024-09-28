@@ -42,9 +42,9 @@
             <div class="surname">{{ surname }}</div>
         </div>
         <div class="action-buttons">
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'shifts')">Edit shifts</button>
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'availability')">Edit availability</button>
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'max_shifts','{{ max_shifts }}')">Edit max shifts</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'shifts','{{ max_shifts }}','{{ surname }}')">Edit shifts</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'availability','{{ max_shifts }}','{{ surname }}')">Edit availability</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'max_shifts','{{ max_shifts }}', '{{ surname }}')">Edit max shifts</button>
         </div>
     </div>
     {% endfor %}
@@ -60,16 +60,18 @@
                 <th class="availability-table-element">Thursday</th>
                 <th class="availability-table-element">Friday</th>
                 <th class="availability-table-element">Saturday</th>
+                <th class="availability-table-element">Max shifts</th>
             </tr>
-            {% for name,surname,max_shifts in employee_list %}
+            {% for name,surname,max_shifts,mon,tue,wed in employee_list %}
             <tr>
                 <td>{{name}} {{surname}}</td>
+                <td></td> <!-- insert new data into these stupid tables -->
                 <td></td>
-                <td>geh</td>
-                <td>geh</td>
-                <td>geh</td>
-                <td>geh</td>
-                <td>geh</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{max_shifts}}</td>
             </tr>
             {%endfor%}
         </table>
@@ -128,7 +130,7 @@ function availability(employee_name){
             document.getElementById("popup-text-availability").innerHTML = this.responseText
         }
     }
-    const json = {"employee_name":employee_name}
+    const json = {"employee_name":employee_name,"employee_surname":surname}
     xhttp.open("POST", "/add_availability", true)
     xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
     xhttp.send(JSON.stringify(json))
@@ -141,7 +143,8 @@ function maxShifts(employee_name){
             document.getElementById("popup-text-max-shifts").innerHTML = this.responseText
         }
     }
-    const json = {"employee_name":employee_name}
+    const json = {
+        "employee_name":employee_name}
     xhttp.open("POST", "/max_shifts", true)
     xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
     xhttp.send(JSON.stringify(json))
@@ -149,7 +152,7 @@ function maxShifts(employee_name){
 
 
         // Function to open the popup
-function openPopup(el, type, max_shifts) {
+function openPopup(el, type, max_shifts,surname) {
     console.log(type)
     const employee_name = el.name
     if (type == 'shifts'){
@@ -169,7 +172,7 @@ function openPopup(el, type, max_shifts) {
     else if (type == 'max_shifts'){
         const popup = document.getElementById("popup-max-shifts")
         const popupText = document.getElementById("popup-text-max-shifts")
-        maxShifts(employee_name)
+        maxShifts(employee_name,surname)
 
         popup.style.display = "flex"
 
@@ -182,6 +185,8 @@ function closePopup() {
     popup.style.display = "none"
     const popup2 = document.getElementById("popup-availability")
     popup2.style.display = "none"
+    const popup3 = document.getElementById("popup-max-shifts")
+    popup3.style.display = "none"
 }
 
 function show_edit_menu(id){

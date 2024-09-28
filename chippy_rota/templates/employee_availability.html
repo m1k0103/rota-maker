@@ -1,5 +1,5 @@
 <div>
-    <h3>Enter availability for {{ name }}</h3>
+    <h3>Enter availability for {{ name }} {{ surname }}</h3>
     
     <form action="/update_availability" method="post">
         <table>
@@ -18,7 +18,7 @@
                 <td><input type="checkbox" name="mon" id="mon" value="True" onclick="toggle_option('mon')"></td>
                 <td><input type="checkbox" name="tue" id="tue" value="True" onclick="toggle_option('tue')"></td>
                 <td><input type="checkbox" name="wed" id="wed" value="True" onclick="toggle_option('wed')"></td>
-                <td><input type="checkbox" name="thur" id="thur" value="True" onclick="toggle_option('thu')"></td>
+                <td><input type="checkbox" name="thu" id="thu" value="True" onclick="toggle_option('thu')"></td>
                 <td><input type="checkbox" name="fri" id="fri" value="True" onclick="toggle_option('fri')"></td>
                 <td><input type="checkbox" name="sat" id="sat" value="True" onclick="toggle_option('sat')"></td>
             </tr>
@@ -42,5 +42,7 @@
             </tr>
         </table>
         <input type="submit" value="Submit availability">
+        <input type="hidden" name="surname" id="surname" value="{{surname}}">
+        <input type="hidden" name="name" id="name" value="{{name}}">
     </form>
 </div>

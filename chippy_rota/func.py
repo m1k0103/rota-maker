@@ -59,9 +59,14 @@ class Database:
         con.commit()
         con.close()
 
-    def update_availability(self,name):
+    def update_availability(self,days,start,end,name,surname): 
+        time_range = [f"{start[i]}-{end[i]}" for i in range(len(start))]
         con = sqlite3.connect(self.database)
-        cursor = con.cursor()     
+        cursor = con.cursor()
+        for day in days:
+            cursor.execute(f"UPDATE availability SET {day}=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?,surname=?)",[time_range[day],name,surname])
+        con.commit() # some error here. maybe use executemany from sqlite3??
+        con.close()
 
     def update_max_shifts(self,name,new_max_amount):
         con = sqlite3.connect(self.database)

@@ -63,20 +63,19 @@ def remove_shift():
 def add_availability():
     rjson = request.json
     employee_name = rjson["employee_name"]
-    return render_template("employee_availability.html", name=employee_name)
+    surname = rjson["employee_surname"]
+    return render_template("employee_availability.html", name=employee_name,surname=surname)
 
 @app.route("/update_availability", methods=["POST"])
 def update_availability():
-    days = [request.form["mon"],request.form["tue"],request.form["wed"],request.form["thu"],request.form["fri"],request.form["sat"]]
-    start = [request.form["monStart"],request.form["tueStart"],request.form["wedStart"],request.form["thuStart"],request.form["friStart"],request.form["satStart"]]
-    end = [request.form["monStart"],request.form["tueStart"],request.form["wedStart"],request.form["thuStart"],request.form["friStart"],request.form["satStart"]]
-    time_range = [f"{start[i]-end[i]}" for i in range(len(start))]
-    selected_days = []
-    for day in days:
-        if day == True:
-            selected_days.append([index(day),day,time_range[index(day)]])
-    print(selected_days) # CARRY ON FROM HERE
-    
+    name = request.form["name"]
+    surname = request.form["surname"]
+    data = dict(request.form)
+    days = [key for key in data.keys() if len(key) == 3 and bool(data[key]) == True]
+    start = [data[key] for key in data.keys() if "Start" in key]
+    end = [data[key] for key in data.keys() if "End" in key]
+    DB.update_availability(days,start,end,name,surname)
+    return redirect(url_for("index"))
 
 
 

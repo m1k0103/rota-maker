@@ -1,4 +1,4 @@
-from flask import Flask, request, session, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect
 from chippy_rota.func import Database
 from chippy_rota.__init__ import get_db_name
 
@@ -12,8 +12,9 @@ DB = Database(get_db_name())
 @app.route("/",methods=["GET","POST"])
 def index():
     if request.method == "GET":
-        all_employees = DB.get_all_employees()        
-        return render_template("index.html", employee_list=all_employees)
+        all_employees = DB.get_all_employees()
+        all_availability = DB.get_all_availability()
+        return render_template("index.html", employee_list=all_employees,all_availability=all_availability)
 
 @app.route("/make_employee",methods=["POST"])
 def make_employee():
@@ -61,10 +62,10 @@ def remove_shift():
 
 @app.route("/add_availability", methods=["POST"])
 def add_availability():
-    rjson = request.json
-    employee_name = rjson["employee_name"]
-    surname = rjson["employee_surname"]
-    return render_template("employee_availability.html", name=employee_name,surname=surname)
+    employee_name = request.json["employee_name"]
+    surname = request.json["employee_surname"]
+    av = DB.get_user_availability(employee_name,surname)
+    return render_template("employee_availability.html", name=employee_name,surname=surname,availability=av)
 
 @app.route("/update_availability", methods=["POST"])
 def update_availability():

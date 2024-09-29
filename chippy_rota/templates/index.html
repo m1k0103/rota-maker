@@ -35,16 +35,16 @@
     </div>
 
 
-     {% for name,surname,max_shifts in employee_list %}
+     {% for name,surname in employee_list %}
     <div class="employee-box">
         <div class="employee-info">
             <div class="name">{{ name }}</div>
             <div class="surname">{{ surname }}</div>
         </div>
         <div class="action-buttons">
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'shifts','{{ max_shifts }}','{{ surname }}')">Edit shifts</button>
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'availability','{{ max_shifts }}','{{ surname }}')">Edit availability</button>
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'max_shifts','{{ max_shifts }}', '{{ surname }}')">Edit max shifts</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'shifts','{{ surname }}')">Edit shifts</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'availability','{{ surname }}')">Edit availability</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'max_shifts', '{{ surname }}')">Edit max shifts</button>
         </div>
     </div>
     {% endfor %}
@@ -57,20 +57,20 @@
                 <th class="availability-table-element">Monday</th>
                 <th class="availability-table-element">Tuesday</th>
                 <th class="availability-table-element">Wednesday</th> <!-- This shit doesnt want to align and i give up -->
-                <th class="availability-table-element">Thursday</th>
+                <th class="availability-table-element">Thursday</th>    <!-- ok it works now lol -->
                 <th class="availability-table-element">Friday</th>
                 <th class="availability-table-element">Saturday</th>
                 <th class="availability-table-element">Max shifts</th>
             </tr>
-            {% for name,surname,max_shifts,mon,tue,wed in employee_list %}
+            {% for nameAndSurname,mon,tue,wed,thu,fri,sat,max_shifts in all_availability %}
             <tr>
-                <td>{{name}} {{surname}}</td>
-                <td></td> <!-- insert new data into these stupid tables -->
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{nameAndSurname}}</td>
+                <td>{{mon}}</td> <!-- insert new data into these stupid tables -->
+                <td>{{tue}}</td>
+                <td>{{wed}}</td>
+                <td>{{thu}}</td>
+                <td>{{fri}}</td>
+                <td>{{sat}}</td>
                 <td>{{max_shifts}}</td>
             </tr>
             {%endfor%}
@@ -122,7 +122,7 @@ function get_details(employee_name){
     xhttp.send(JSON.stringify(json))
 }
 
-function availability(employee_name){
+function availability(employee_name,surname){
     console.log(employee_name)
     const xhttp = new XMLHttpRequest()
     xhttp.onreadystatechange = function(){
@@ -152,7 +152,7 @@ function maxShifts(employee_name){
 
 
         // Function to open the popup
-function openPopup(el, type, max_shifts,surname) {
+function openPopup(el, type, surname) {
     console.log(type)
     const employee_name = el.name
     if (type == 'shifts'){
@@ -165,7 +165,7 @@ function openPopup(el, type, max_shifts,surname) {
     else if (type == 'availability'){
         const popup = document.getElementById("popup-availability");
         const popupText = document.getElementById("popup-text-availability");
-        availability(employee_name)
+        availability(employee_name,surname)
         // Show the popup
         popup.style.display = "flex";
     }
@@ -194,8 +194,16 @@ function show_edit_menu(id){
     document.getElementById("form_shift_id").value = id
 }
 function toggle_option(day){
-    document.getElementById(`${day}Start`).disabled = !document.getElementById(`${day}Start`).disabled
-    document.getElementById(`${day}End`).disabled = !document.getElementById(`${day}End`).disabled
+    const start_time = document.getElementById(`${day}Start`)
+    const end_time = document.getElementById(`${day}End`)
+
+    start_time.disabled = !start_time.disabled
+    end_time.disabled = !end_time.disabled
+    
+    // clears the time values in the time boxes
+    start_time.value = ""
+    end_time.value = ""
+
 }
 function delete_shift(id){
     const xhttp = new XMLHttpRequest()

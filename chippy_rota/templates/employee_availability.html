@@ -12,34 +12,41 @@
                 <th>Fri</th>
                 <th>Sat</th>
             </tr>
-
             <tr>
                 <td><b>Days</b></td>
-                <td><input type="checkbox" name="mon" id="mon" value="True" onclick="toggle_option('mon')"></td>
-                <td><input type="checkbox" name="tue" id="tue" value="True" onclick="toggle_option('tue')"></td>
-                <td><input type="checkbox" name="wed" id="wed" value="True" onclick="toggle_option('wed')"></td>
-                <td><input type="checkbox" name="thu" id="thu" value="True" onclick="toggle_option('thu')"></td>
-                <td><input type="checkbox" name="fri" id="fri" value="True" onclick="toggle_option('fri')"></td>
-                <td><input type="checkbox" name="sat" id="sat" value="True" onclick="toggle_option('sat')"></td>
+                {% set days = ['mon','tue','wed','thu','fri','sat'] %}
+                {% for time in availability %}
+                    {% if time == "" %}
+                        <td><input type="checkbox" name="{{days[loop.index0]}}" id="{{days[loop.index0]}}" value="True" onclick="toggle_option('{{days[loop.index0]}}')"></td>
+                    {%else %}
+                        <td><input type="checkbox" name="{{days[loop.index0]}}" id="{{days[loop.index0]}}" value="True" onclick="toggle_option('{{days[loop.index0]}}')" checked></td>
+                    {% endif %}
+                {% endfor %}
+
             </tr>
             <tr style="text-align: center;">
-                <td><b>Start</b></td>
-                <td><input type="time" name="monStart" id="monStart" value="True" disabled></td>
-                <td><input type="time" name="tueStart" id="tueStart" value="True" disabled></td>
-                <td><input type="time" name="wedStart" id="wedStart" value="True" disabled></td>
-                <td><input type="time" name="thuStart" id="thuStart" value="True" disabled></td>
-                <td><input type="time" name="friStart" id="friStart" value="True" disabled></td>
-                <td><input type="time" name="satStart" id="satStart" value="True" disabled></td>
+            <td><b>Start</b></td>
+            {% for time in availability %}
+                    {% set time_list = time.split('-') %}
+                    {% if time == "" %}
+                        <td><input type="time" name="{{days[loop.index0]}}Start" id="{{days[loop.index0]}}Start" value="False" disabled></td>
+                        {%else %}
+                        <td><input type="time" name="{{days[loop.index0]}}Start" id="{{days[loop.index0]}}Start" value="{{time_list[0]}}"></td>
+                    {%endif%}
+                {% endfor %}
             </tr>
             <tr style="text-align: center;">
                 <td><b>End</b></td>
-                <td><input type="time" name="monEnd" id="monEnd" value="True" disabled></td>
-                <td><input type="time" name="tueEnd" id="tueEnd" value="True" disabled></td>
-                <td><input type="time" name="wedEnd" id="wedEnd" value="True" disabled></td>
-                <td><input type="time" name="thuEnd" id="thuEnd" value="True" disabled></td>
-                <td><input type="time" name="friEnd" id="friEnd" value="True" disabled></td>
-                <td><input type="time" name="satEnd" id="satEnd" value="True" disabled></td>
+            {% for time in availability %}
+            {% set time_list = time.split('-') %}
+                {% if time == "" %}
+                <td><input type="time" name="{{days[loop.index0]}}End" id="{{days[loop.index0]}}End" value="False" disabled></td>
+                {% else %}
+                <td><input type="time" name="{{days[loop.index0]}}End" id="{{days[loop.index0]}}End" value="{{time_list[1]}}"></td>
+                {% endif %}
+                {% endfor %}
             </tr>
+            
         </table>
         <input type="submit" value="Submit availability">
         <input type="hidden" name="surname" id="surname" value="{{surname}}">

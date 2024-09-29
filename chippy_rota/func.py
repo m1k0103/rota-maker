@@ -1,4 +1,19 @@
 import sqlite3
+import yaml
+
+def get_db_name():
+    with open("config.yaml") as f:
+        conf = yaml.load(f, Loader=yaml.FullLoader)
+        DB_NAME = conf["database_name"]
+        return DB_NAME
+
+def get_admin_details():
+    with open("config.yaml", "r") as f:
+        conf = yaml.load(f, Loader=yaml.FullLoader)
+        ADMIN_USERNAME = conf["admin_username"]
+        ADMIN_PASSWORD = conf["admin_password"]
+        ADMIN_SURNAME = conf["admin_surname"]
+        return ADMIN_USERNAME, ADMIN_SURNAME, ADMIN_PASSWORD
 
 class Database:
     def __init__(self,database):
@@ -7,8 +22,9 @@ class Database:
     def add_employee(self,name,surname): # untested
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("INSERT INTO employees(name,surname,max_shifts) VALUES (?,?,0)", [name,surname])
+        cursor.execute("INSERT INTO employees(name,surname) VALUES (?,?)", [name,surname])
         cursor.execute("INSERT INTO shifts(employee_id, day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none","none","none"])
+        cursor.execute("INSERT INTO availability(employee_id,mon,tue,wed,thu,fri,sat,sun,max_shifts) VALUES ((SELECT eid FROM employees WHERE name=? AND surname=?),'','','','','','','',0)",[name,surname])
         con.commit()
         con.close()
         return True
@@ -26,7 +42,7 @@ class Database:
     def get_all_employees(self):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        result = [list(tup) for tup in cursor.execute("SELECT name,surname,max_shifts FROM employees").fetchall()]
+        result = [list(tup) for tup in cursor.execute("SELECT name,surname FROM employees").fetchall()]
         con.close()
         return result
 
@@ -63,17 +79,37 @@ class Database:
         time_range = [f"{start[i]}-{end[i]}" for i in range(len(start))]
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        for day in days:
-            cursor.execute(f"UPDATE availability SET {day}=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?,surname=?)",[time_range[day],name,surname])
+        
+        # RESETS ALL DAYS TO HAVE NO VALUE
+        cursor.execute(f"UPDATE availability SET mon='',tue='',wed='',thu='',fri='',sat='' WHERE employee_id=(SELECT eid FROM employees WHERE name=? AND surname=?)",[name,surname])
+
+        for i in range(len(days)):
+            cursor.execute(f"UPDATE availability SET {days[i]}=? WHERE employee_id=(SELECT eid FROM employees WHERE name=? AND surname=?)",[time_range[i],name,surname])
         con.commit() # some error here. maybe use executemany from sqlite3??
         con.close()
 
     def update_max_shifts(self,name,new_max_amount):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("UPDATE employees SET max_shifts=? WHERE name=?",[new_max_amount,name])
+        cursor.execute("UPDATE availability SET max_shifts=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?)",[new_max_amount,name])
         con.commit()
         con.close()
+
+    def get_all_availability(self):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        result = [list(tup) for tup in cursor.execute("SELECT employee_id,mon,tue,wed,thu,fri,sat,max_shifts FROM availability").fetchall()]
+        for record in result:
+            record[0] = " ".join(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[record[0]]).fetchall()[0])
+        con.commit()
+        con.close()
+        return result
+
+    def get_user_availability(self,name,surname):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        result = cursor.execute("SELECT mon,tue,wed,thu,fri,sat FROM availability WHERE employee_id=(SELECT eid FROM employees WHERE name=? AND surname=?)",[name,surname]).fetchall()[0]
+        return result
 
 
     def generate_shift_from_av(self,all_employee_av): # al_employee_av must be type LIST

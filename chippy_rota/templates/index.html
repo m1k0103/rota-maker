@@ -9,7 +9,7 @@
 <body>
     <div style="display: flex;">
         
-        <h1><u>Employee Management</u></h1> <!-- Main heading -->
+        <h2><u>Employee Management</u></h1> <!-- Main heading -->
         <div class="make-employee-container"> <!-- Create Employee -->
             <h4 class="make-employee-title">Add new employee:</h4> <!-- Next to title -->
             <form action="/make_employee" method="post">
@@ -23,6 +23,16 @@
         <div class="delete-employee-container"> <!-- Delete Employee -->
             <h4 class="delete-employee-title">Remove employee:</h4>
             <form action="/remove_employee" method="post">
+                <label class="delete-employee-labels" for="name">Name:</label>
+                <input class="delete-employee-input" type="text" id="name" name="name">
+                <label class="delete-employee-labels" for="surname">Surname:</label>
+                <input class="delete-employee-input" type="text" id="surname" name="surname">
+                <input type="Submit" value="Remove">
+            </form>
+        </div>
+        <div class="generate-shifts-container"> <!-- Delete Employee -->
+            <h4 class="generate-shifts-container-title">Remove employee:</h4>
+            <form action="/generate_shifts" method="post">
                 <label class="delete-employee-labels" for="name">Name:</label>
                 <input class="delete-employee-input" type="text" id="name" name="name">
                 <label class="delete-employee-labels" for="surname">Surname:</label>
@@ -49,6 +59,7 @@
 </div>
 
 <div class="right_div">
+    <p style="margin: 1px; margin-top: 10px; margin-bottom: 7px; text-align: center; text-decoration: underline;">Current availability for employees</p>
     <div class="availability-table-container"></div>
     <table class="availability-table">
         <tr class="availability-table-element">
@@ -212,8 +223,9 @@ function delete_shift(id){
             console.log(`shift with id ${id} deleted`)
         }
     }
-    xhttp.open("POST","/delete_shift",true)
+    xhttp.open("POST","/remove_shift",true)
     const json = {"shift_id":id}
+    xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
     xhttp.send(JSON.stringify(json))
 }
 

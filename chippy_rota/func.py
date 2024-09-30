@@ -23,7 +23,6 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
         cursor.execute("INSERT INTO employees(name,surname) VALUES (?,?)", [name,surname])
-        cursor.execute("INSERT INTO shifts(employee_id, day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none","none","none"])
         cursor.execute("INSERT INTO availability(employee_id,mon,tue,wed,thu,fri,sat,sun,max_shifts) VALUES ((SELECT eid FROM employees WHERE name=? AND surname=?),'','','','','','','',0)",[name,surname])
         con.commit()
         con.close()
@@ -111,8 +110,37 @@ class Database:
         result = cursor.execute("SELECT mon,tue,wed,thu,fri,sat FROM availability WHERE employee_id=(SELECT eid FROM employees WHERE name=? AND surname=?)",[name,surname]).fetchall()[0]
         return result
 
+    def name_surname_to_eid(self,name,surname):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        eid = cursor.execute("SELECT eid FROM employees WHERE name=? AND surname=?",[name,surname]).fetchall()[0][0]
+        con.close()
+        return eid
 
-    def generate_shift_from_av(self,all_employee_av): # al_employee_av must be type LIST
+    def eid_to_name_surname(self,eid):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        name_surname = cursor.execute("SELECT name,surname FROM employees WHERE eid=?",eid).fetchall()[0]
+        return name_surname
+
+    def generate_shifts_from_availability(self): 
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        all_availability = self.get_all_availability()
+
+        for availability in range(len(all_availability)):
+            max_shifts = availability[2]
+            shifts = []
+            all_days = [availability[3:]] # includes all days including 
+            available_days = [day for day in all_days if day != ""]
+            for j in range(len(max_shifts)):
+                shifts.append() # need to also add max hours to employees. :/ aj aj aj
+
+        
+
+    
+        
+        # al_employee_av must be type LIST
         # [[employee_name,employee_surname,3,"11:00-15:00","","","16:00-20:00","",""]]
         # 2D list
         #  - each list will be data of an employee

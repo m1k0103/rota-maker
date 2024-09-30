@@ -129,34 +129,35 @@ button:hover {
     border: 1px black solid;
     margin-left: 2em;
     margin-bottom: 3px;
-    padding: 1em;
+    padding: 0.5em;
 }
 .make-employee-title{
     text-align: center;
     margin-top: 0;
+    font-size: smaller;
 }
 .make-employee-labels{
     font-size: small;
 }
 .make-employee-input{
-    width: 90px;
+    width: 80px;
 }
 .delete-employee-container{
     border: 1px black solid;
     margin-left: 1em;
     margin-bottom: 3px;
-    padding: 1em;
-    
+    padding: 0.5em;
 }
 .delete-employee-title{
     text-align: center;
     margin-top: 0;
+    font-size: smaller;
 }
 .delete-employee-labels{
     font-size: small;
 }
 .delete-employee-input{
-    width: 90px;
+    width: 80px;
 }
 .availability-table-container{
     display: flex;

@@ -3,6 +3,13 @@ body {
     background-color: #f0f0f0;
 }
 
+.left_div{
+    float: left;
+}
+.right_div{
+    float: right;
+}
+
 .employee-box {
     display: flex;
     align-items: left;
@@ -12,7 +19,7 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     color: white;
-    width: 600px;
+    width: 590px;
     margin-right: auto;
     margin-left: 2%;
 }
@@ -157,10 +164,19 @@ button:hover {
     padding-right: 5em;
 }
 .availability-table{
+    font-size: small;
     border: 3px black solid;
     text-align: center;
+    border-collapse: collapse;
+    
 }
 .availability-table-element{
-    width:100px;
+    width:70px;
     border-bottom: 1px black solid;
+}
+tr{
+    border: 1px black solid;
+}
+td{
+    border: 1px black solid;
 }

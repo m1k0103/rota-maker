@@ -30,11 +30,9 @@
                 <input type="Submit" value="Remove">
             </form>
         </div>
-
-
     </div>
 
-
+<div class="left_div">
      {% for name,surname in employee_list %}
     <div class="employee-box">
         <div class="employee-info">
@@ -48,11 +46,12 @@
         </div>
     </div>
     {% endfor %}
+</div>
 
-    
+<div class="right_div">
     <div class="availability-table-container"></div>
-        <table class="availability-table">
-            <tr class="availability-table-element">
+    <table class="availability-table">
+        <tr class="availability-table-element">
                 <th class="availability-table-element">Employee</th>
                 <th class="availability-table-element">Monday</th>
                 <th class="availability-table-element">Tuesday</th>
@@ -76,6 +75,7 @@
             {%endfor%}
         </table>
     </div>
+</div>
 
 
     <!-- Shifts Popup -->

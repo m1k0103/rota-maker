@@ -92,6 +92,7 @@ def max_shifts():
         name = request.json["employee_name"]
         return render_template("max_shifts.html",name=name)
 
-
-def generate_rota_message():
-    pass
+@app.route("/generate_shifts") # GENERATES SHIFTS FROM AVAILABILITY
+def generate_shifts():
+    DB.generate_shifts_from_availability()
+    return redirect(url_for("index"))

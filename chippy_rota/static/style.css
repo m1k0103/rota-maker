@@ -19,15 +19,15 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     color: white;
-    width: 590px;
+    width: 530px;
     margin-right: auto;
     margin-left: 2%;
 }
 
 .employee-info {
     display: flex;
-    gap: 20px;
-    flex-basis: 40%;
+    gap: 15px;
+    flex-basis: 30%;
 }
 
 .name, .surname {
@@ -36,6 +36,8 @@ body {
     border: 1px solid black;
     text-align: center;
     flex: 1;
+    font-size: smaller;
+    width: 70px;
 }
 
 .action-buttons {
@@ -45,12 +47,12 @@ body {
 }
 
 button {
-    padding: 10px;
+    padding: 7px;
     background-color: #00FF00;
     border: none;
     cursor: pointer;
     color: black;
-    width: 100px;
+    width: 95px;
 }
 
 button:hover {
@@ -159,11 +161,6 @@ button:hover {
 .delete-employee-input{
     width: 80px;
 }
-.availability-table-container{
-    display: flex;
-    justify-content: right;
-    padding-right: 5em;
-}
 .availability-table{
     font-size: small;
     border: 3px black solid;
@@ -175,9 +172,37 @@ button:hover {
     width:70px;
     border-bottom: 1px black solid;
 }
+.shifts-table{
+    margin-top:1.5em;
+    font-size: small;
+    border: 3px black solid;
+    text-align: center;
+    border-collapse: collapse;
+}
+.shifts-table-element{
+    width: 70px;
+    border-bottom: 1px black solid;
+}
 tr{
     border: 1px black solid;
 }
 td{
     border: 1px black solid;
+}
+.max-shifts-title{
+    font-size: x-small;
+    text-align: center;
+}
+.generate-shifts-container{
+    margin-left: 1em;
+    border: 1px black solid;
+    text-align: center;
+}
+.generate-shifts-title{
+    margin-top: 0;
+    font-size: small;
+    padding: 5px;
+}
+#max-hours-input, #max-shifts-input{
+    width:50px;
 }

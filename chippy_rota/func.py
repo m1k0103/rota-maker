@@ -63,7 +63,7 @@ class Database:
     def create_blank_shift(self,name):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        cursor.execute("INSERT INTO shifts(employee_id,day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"none,","none","none"])
+        cursor.execute("INSERT INTO shifts(employee_id,day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,"","",""])
         con.commit()
         con.close()
     
@@ -115,7 +115,17 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
         # carry on from here
-        pass
+        result = [list(tup) for tup in cursor.execute("SELECT employee_id,day,start_time,end_time FROM shifts").fetchall()]
+        new=[]
+        for record in result:
+            record[0] = "".join(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[record[0]]).fetchall()[0])
+            record[2] = f"{record[2]}-{record[3]}"
+            del record[3]
+            new.append(record)
+        con.close()
+        return new
+    # Make it so it reads the day from the stored value, then aligns it with the index a list so that
+    # it can be aligned with the table on the index.html page.
 
     def get_user_availability(self,name,surname):
         con = sqlite3.connect(self.database)

@@ -14,7 +14,8 @@ def index():
     if request.method == "GET":
         all_employees = DB.get_all_employees()
         all_availability = DB.get_all_availability_for_table()
-        return render_template("index.html", employee_list=all_employees,all_availability=all_availability)
+        all_shifts = DB.get_all_shifts_for_table()
+        return render_template("index.html", employee_list=all_employees,all_availability=all_availability,all_shifts=all_shifts)
 
 @app.route("/make_employee",methods=["POST"])
 def make_employee():

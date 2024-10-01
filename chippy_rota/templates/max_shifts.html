@@ -1,9 +1,12 @@
 <div>
     <form action="/max_shifts" method="post">
-        <label for="max-shifts-input">Change the maximum amount of shifts for {{name}}</label>
-        <input type="text" id="max-shifts-input" name="max-shifts-input">
+        <h3 style="text-align: center;">Max shifts and max hours for {{ name }}</h3>
+        <label for="max-shifts-input">Max shifts:</label>
+        <input type="number" id="max-shifts-input" name="max-shifts-input" min="0">
+        <label for="max-hours-input">Max hours:</label>
+        <input type="number" id="max-hours-input" name="max-hours-input" min="0">
         <input type="hidden" name="stage2" id="stage2" value="stage2">
         <input type="hidden" name="name" value="{{name}}">
-        <input type="submit" value="Submit">
+        <input style="margin-top: 1em;" type="submit" value="Submit">
     </form>
 </div>

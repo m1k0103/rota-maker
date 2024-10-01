@@ -16,7 +16,7 @@
             <td class="popup-td">{{ start_time }}</td>
             <td class="popup-td">{{ end_time }}</td>
             <td class="popup-td"><input type="submit" value="Edit" onclick='show_edit_menu("{{ id }}")'></td>
-            <td class="popup-td"><input type="submit" value="Delete" onclick="delete_shift('{{ id }}')"></td>
+            <td class="popup-td"><input type="submit" value="Delete" onclick='delete_shift("{{ id }}")'></td>
         </tr>
         {% endfor %}  
     </table>

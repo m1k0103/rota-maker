@@ -13,7 +13,7 @@ DB = Database(get_db_name())
 def index():
     if request.method == "GET":
         all_employees = DB.get_all_employees()
-        all_availability = DB.get_all_availability()
+        all_availability = DB.get_all_availability_for_table()
         return render_template("index.html", employee_list=all_employees,all_availability=all_availability)
 
 @app.route("/make_employee",methods=["POST"])
@@ -79,20 +79,22 @@ def update_availability():
     return redirect(url_for("index"))
 
 
-
 @app.route("/max_shifts", methods=["POST"])
 def max_shifts():
     if "stage2" in request.form:
         name = request.form["name"]
-        amount = request.form["max-shifts-input"]
-        DB.update_max_shifts(name,amount)
+        max_shifts_amount = request.form["max-shifts-input"]
+        max_hours_amount = request.form["max-hours-input"]
+        DB.update_max_shifts(name,max_shifts_amount)
+        DB.update_max_hours(name,max_hours_amount)
         return redirect(url_for("index"))
         
     else:
         name = request.json["employee_name"]
         return render_template("max_shifts.html",name=name)
 
-@app.route("/generate_shifts") # GENERATES SHIFTS FROM AVAILABILITY
+
+@app.route("/generate_shifts",methods=["POST"]) # GENERATES SHIFTS FROM AVAILABILITY
 def generate_shifts():
     DB.generate_shifts_from_availability()
     return redirect(url_for("index"))

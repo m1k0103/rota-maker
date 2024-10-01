@@ -23,7 +23,7 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
         cursor.execute("INSERT INTO employees(name,surname) VALUES (?,?)", [name,surname])
-        cursor.execute("INSERT INTO availability(employee_id,mon,tue,wed,thu,fri,sat,sun,max_shifts) VALUES ((SELECT eid FROM employees WHERE name=? AND surname=?),'','','','','','','',0)",[name,surname])
+        cursor.execute("INSERT INTO availability(employee_id,mon,tue,wed,thu,fri,sat,sun,max_shifts,max_hours) VALUES ((SELECT eid FROM employees WHERE name=? AND surname=?),'','','','','','','',0,0)",[name,surname])
         con.commit()
         con.close()
         return True
@@ -94,15 +94,28 @@ class Database:
         con.commit()
         con.close()
 
-    def get_all_availability(self):
+    def update_max_hours(self,name,new_max):
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        result = [list(tup) for tup in cursor.execute("SELECT employee_id,mon,tue,wed,thu,fri,sat,max_shifts FROM availability").fetchall()]
+        cursor.execute("UPDATE availability SET max_hours=? WHERE employee_id=(SELECT eid FROM employees WHERE name=?)",[new_max, name])
+        con.commit()
+        con.close()
+
+    def get_all_availability_for_table(self):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        result = [list(tup) for tup in cursor.execute("SELECT employee_id,mon,tue,wed,thu,fri,sat,max_shifts,max_hours FROM availability").fetchall()]
         for record in result:
             record[0] = " ".join(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[record[0]]).fetchall()[0])
         con.commit()
         con.close()
         return result
+
+    def get_all_shifts_for_table(self):
+        con = sqlite3.connect(self.database)
+        cursor = con.cursor()
+        # carry on from here
+        pass
 
     def get_user_availability(self,name,surname):
         con = sqlite3.connect(self.database)
@@ -128,20 +141,17 @@ class Database:
         cursor = con.cursor()
         all_availability = self.get_all_availability()
 
-        for availability in range(len(all_availability)):
-            max_shifts = availability[2]
-            shifts = []
-            all_days = [availability[3:]] # includes all days including 
-            available_days = [day for day in all_days if day != ""]
-            for j in range(len(max_shifts)):
-                shifts.append() # need to also add max hours to employees. :/ aj aj aj
-
-        
-
+        for availability in all_availability:
+            max_shifts = availability[7:]
+            #shifts = []
+            #all_days = [availability[3:]] # includes all days including 
+            #available_days = [day for day in all_days if day != ""]
+            #for j in range(len(max_shifts)):
+            #    shifts.append() # need to also add max hours to employees. :/ aj aj aj
     
         
         # al_employee_av must be type LIST
-        # [[employee_name,employee_surname,3,"11:00-15:00","","","16:00-20:00","",""]]
+        # [[employee_name,employee_surname,"11:00-15:00","","","16:00-20:00","","",3]]
         # 2D list
         #  - each list will be data of an employee
         #  - index 0 will be employee name and index 1 employee surname, index 2 the max shifts to generate for the employee, 

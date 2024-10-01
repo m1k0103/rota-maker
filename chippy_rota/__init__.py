@@ -47,6 +47,7 @@ def start():
                        sat TEXT,
                        sun TEXT,
                        max_shifts INT,
+                       max_hours INT,
                        FOREIGN KEY (employee_id) REFERENCES employees(eid)
                        )""")
         con.commit()

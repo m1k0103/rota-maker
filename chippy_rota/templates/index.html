@@ -30,14 +30,10 @@
                 <input type="Submit" value="Remove">
             </form>
         </div>
-        <div class="generate-shifts-container"> <!-- Delete Employee -->
-            <h4 class="generate-shifts-container-title">Remove employee:</h4>
+        <div class="generate-shifts-container"> <!-- Generate Shifts -->
+            <h4 class="generate-shifts-title">Generate Shifts:</h4>
             <form action="/generate_shifts" method="post">
-                <label class="delete-employee-labels" for="name">Name:</label>
-                <input class="delete-employee-input" type="text" id="name" name="name">
-                <label class="delete-employee-labels" for="surname">Surname:</label>
-                <input class="delete-employee-input" type="text" id="surname" name="surname">
-                <input type="Submit" value="Remove">
+                <input type="Submit" value="Generate">
             </form>
         </div>
     </div>
@@ -52,15 +48,15 @@
         <div class="action-buttons">
             <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'shifts','{{ surname }}')">Edit shifts</button>
             <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'availability','{{ surname }}')">Edit availability</button>
-            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'max_shifts', '{{ surname }}')">Edit max shifts</button>
+            <button class="edit-days" name="{{ name }}" onclick="openPopup(this,'max_shifts', '{{ surname }}')" style="font-size: 12px;">Edit max shifts and hours</button>
         </div>
     </div>
     {% endfor %}
 </div>
 
 <div class="right_div">
+
     <p style="margin: 1px; margin-top: 10px; margin-bottom: 7px; text-align: center; text-decoration: underline;">Current availability for employees</p>
-    <div class="availability-table-container"></div>
     <table class="availability-table">
         <tr class="availability-table-element">
                 <th class="availability-table-element">Employee</th>
@@ -70,9 +66,10 @@
                 <th class="availability-table-element">Thursday</th>    <!-- ok it works now lol -->
                 <th class="availability-table-element">Friday</th>
                 <th class="availability-table-element">Saturday</th>
-                <th class="availability-table-element">Max shifts</th>
+                <th class="availability-table-element">Max Shifts</th>
+                <th class="availability-table-element">Max Hours</th>
             </tr>
-            {% for nameAndSurname,mon,tue,wed,thu,fri,sat,max_shifts in all_availability %}
+            {% for nameAndSurname,mon,tue,wed,thu,fri,sat,max_shifts,max_hours in all_availability %}
             <tr>
                 <td>{{nameAndSurname}}</td>
                 <td>{{mon}}</td> <!-- insert new data into these stupid tables -->
@@ -82,10 +79,25 @@
                 <td>{{fri}}</td>
                 <td>{{sat}}</td>
                 <td>{{max_shifts}}</td>
+                <td>{{max_hours}}</td>
             </tr>
             {%endfor%}
         </table>
+        <table class="shifts-table">
+        <tr>
+            <th class="shifts-table-element">Employee</th>
+            <th class="shifts-table-element">Monday</th>
+            <th class="shifts-tale-element">Tuesday</th>
+            <th class="shifts-table-element">Wednesday</th> <!-- This shit doesnt want to align and i give up -->
+            <th class="shifts-table-element">Thursday</th>    <!-- ok it works now lol -->
+            <th class="shifts-table-element">Friday</th>
+            <th class="shifts-table-element">Saturday</th>
+            <th class=""></th>
+        </tr>
+        </table>
     </div>
+
+    
 </div>
 
 
@@ -224,7 +236,7 @@ function delete_shift(id){
         }
     }
     xhttp.open("POST","/remove_shift",true)
-    const json = {"shift_id":id}
+    const json = {"shift_id":parseInt(id)}
     xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
     xhttp.send(JSON.stringify(json))
 }

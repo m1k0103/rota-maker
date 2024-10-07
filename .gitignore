@@ -2,3 +2,4 @@
 *.db
 config.yaml
 plan.md
+__pycache__

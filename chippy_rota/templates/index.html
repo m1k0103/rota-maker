@@ -83,22 +83,29 @@
             </tr>
             {%endfor%}
         </table>
+        <p style="margin: 1px; margin-top: 10px; margin-bottom: 7px; text-align: center; text-decoration: underline;">Current Shifts</p>
         <table class="shifts-table">
         <tr>
             <th class="shifts-table-element">Employee</th>
             <th class="shifts-table-element">Monday</th>
-            <th class="shifts-tale-element">Tuesday</th>
+            <th class="shifts-table-element">Tuesday</th>
             <th class="shifts-table-element">Wednesday</th> <!-- This shit doesnt want to align and i give up -->
             <th class="shifts-table-element">Thursday</th>    <!-- ok it works now lol -->
             <th class="shifts-table-element">Friday</th>
             <th class="shifts-table-element">Saturday</th>
             
         </tr>
-        <tr>
-            {% for employee,mon,tue,wed,thu,fri,sat in all_shifts %}
-
-            {%endfor%}
-        </tr>
+        {% for employee,mon,tue,wed,thu,fri,sat in all_shifts %}
+            <tr>
+                <td>{{employee}}</td>
+                <td>{{mon}}</td>
+                <td>{{tue}}</td>
+                <td>{{wed}}</td>
+                <td>{{thu}}</td>
+                <td>{{fri}}</td>
+                <td>{{sat}}</td>
+            </tr>
+        {%endfor%}
         </table>
     </div>
 
@@ -238,6 +245,7 @@ function delete_shift(id){
     xhttp.onreadystatechange = function(){
         if (this.readyState == 4 && this.status == 200){
             console.log(`shift with id ${id} deleted`)
+            document.location = document.location
         }
     }
     xhttp.open("POST","/remove_shift",true)

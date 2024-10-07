@@ -1,5 +1,15 @@
 import sqlite3
 import yaml
+import calendar
+
+def date_to_week_day(date):
+    try:
+        year,month,day = [int(i) for i in date.split('-')]
+    except:
+        return ""
+    day_num = calendar.weekday(year,month,day)
+    days = ["mon","tue","wed","thu","fri","sat"]
+    return days[day_num]
 
 def get_db_name():
     with open("config.yaml") as f:
@@ -115,15 +125,25 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
         # carry on from here
-        result = [list(tup) for tup in cursor.execute("SELECT employee_id,day,start_time,end_time FROM shifts").fetchall()]
-        new=[]
-        for record in result:
-            record[0] = "".join(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[record[0]]).fetchall()[0])
-            record[2] = f"{record[2]}-{record[3]}"
-            del record[3]
-            new.append(record)
+        result = [list(tup) for tup in cursor.execute("SELECT employee_id,day,start_time,end_time FROM shifts").fetchall()] # all employee data
+        
+        days = ["mon","tue","wed","thu","fri","sat"]
+        for_table = []
+        
+        for i in range(len(result)):
+            namesurname = result[i][0] = " ".join(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[result[i][0]]).fetchall()[0])
+            stored_day = date_to_week_day(result[i][1])
+            timerange = result[i][2] = f"{result[i][2]}-{result[i][3]}"
+        
+            for_table.append([namesurname,"","","","","",""])
+            if stored_day == '':
+                con.close()
+                pass
+            else:
+                for_table[i][days.index(stored_day)] = timerange
+        
         con.close()
-        return new
+        return for_table
     # Make it so it reads the day from the stored value, then aligns it with the index a list so that
     # it can be aligned with the table on the index.html page.
 

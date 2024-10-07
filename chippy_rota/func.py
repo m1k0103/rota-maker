@@ -141,7 +141,7 @@ class Database:
                 pass
             else:
                 for_table[i][days.index(stored_day)] = timerange
-        
+    
         con.close()
         return for_table
     # Make it so it reads the day from the stored value, then aligns it with the index a list so that

@@ -141,17 +141,15 @@ class Database:
         for_table = []
         
         for i in range(len(result)):
-            namesurname = result[i][0] = " ".join(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[result[i][0]]).fetchall()[0])
+            namesurname = result[i][0] = " ".join(list(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[result[i][0]]).fetchall()[0]))
             stored_day = date_to_week_day(result[i][1])
             timerange = result[i][2] = f"{result[i][2]}-{result[i][3]}"
         
             for_table.append([namesurname,"","","","","",""])
             if stored_day == '':
-                con.close()
                 pass
             else:
                 for_table[i][days.index(stored_day)] = timerange
-    
         con.close()
         return for_table
     # Make it so it reads the day from the stored value, then aligns it with the index a list so that
@@ -181,13 +179,16 @@ class Database:
 
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-
+        cursor.execute("DELETE FROM shifts")
+        con.commit()
+        con.close()
 
         all_availability = self.get_all_availability_for_table()
 
         shift_details_employees = []
         for emp_av in all_availability:
-            em_name = emp_av[0]
+            em_name = emp_av[0].split(" ")[0]
+            print(em_name)
             em_max_hours = emp_av[8]
             em_max_shifts = emp_av[7]
             avg_hrs_per_shift = math.ceil(em_max_hours / em_max_shifts)
@@ -200,9 +201,9 @@ class Database:
                 else: # if availability on the day is present
                     time_range = stored_days[i]
                     avail_start_time, avail_end_time = time_range.split("-")
-                    shift_start = str(datetime.timedelta(hours=avail_start_time.split(":")[0],minutes=avail_start_time.split(":")[1]))
+                    shift_start = str(datetime.timedelta(hours=int(avail_start_time.split(":")[0]),minutes=int(avail_start_time.split(":")[1])))
                     shift_end = str(datetime.timedelta(hours=int(avail_start_time.split(":")[0]),minutes=int(avail_start_time.split(":")[1])) + datetime.timedelta(hours=avg_hrs_per_shift))
-                    self.create_shift_gen(em_name,stored_days[i],shift_start,shift_end)
+                    self.create_shift_gen(em_name,days[stored_days.index(stored_days[i])],shift_start,shift_end)
 
         
         # al_employee_av must be type LIST

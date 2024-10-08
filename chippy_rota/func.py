@@ -185,7 +185,6 @@ class Database:
 
         all_availability = self.get_all_availability_for_table()
 
-        shift_details_employees = []
         for emp_av in all_availability:
             em_name = emp_av[0].split(" ")[0]
             print(em_name)

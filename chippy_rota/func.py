@@ -1,6 +1,9 @@
 import sqlite3
 import yaml
 import calendar
+import random
+import math
+import datetime
 
 def date_to_week_day(date):
     try:
@@ -81,6 +84,13 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()  
         cursor.execute("DELETE FROM shifts WHERE shift_id=?",[shift_id])
+        con.commit()
+        con.close()
+
+    def create_shift_gen(self,name,day,start_time,end_time):
+        con = sqlite3.connect(self.database)
+        cur = con.cursor()
+        cur.execute("INSERT INTO shifts(employee_id,day,start_time,end_time) VALUES ((SELECT eid FROM employees WHERE name=?),?,?,?)",[name,day,start_time,end_time])
         con.commit()
         con.close()
 
@@ -166,24 +176,36 @@ class Database:
         name_surname = cursor.execute("SELECT name,surname FROM employees WHERE eid=?",eid).fetchall()[0]
         return name_surname
 
-    def generate_shifts_from_availability(self): 
+    def generate_shifts_from_availability(self):
+        days = ["mon","tue","wed","thu","fri","sat"]
+
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
-        all_availability = self.get_all_availability()
 
-        for availability in all_availability:
-            max_shifts = availability[7:]
-            #shifts = []
-            #all_days = [availability[3:]] # includes all days including 
-            #available_days = [day for day in all_days if day != ""]
-            #for j in range(len(max_shifts)):
-            #    shifts.append() # need to also add max hours to employees. :/ aj aj aj
-    
+
+        all_availability = self.get_all_availability_for_table()
+
+        shift_details_employees = []
+        for emp_av in all_availability:
+            em_name = emp_av[0]
+            em_max_hours = emp_av[8]
+            em_max_shifts = emp_av[7]
+            avg_hrs_per_shift = math.ceil(em_max_hours / em_max_shifts)
+
+            stored_days = emp_av[1:][:-2]
+            print(stored_days)
+            for i in range(len(stored_days)):
+                if stored_days[i] == "": # if no availability for the day, then it skips the day
+                    pass
+                else: # if availability on the day is present
+                    time_range = stored_days[i]
+                    avail_start_time, avail_end_time = time_range.split("-")
+                    shift_start = str(datetime.timedelta(hours=avail_start_time.split(":")[0],minutes=avail_start_time.split(":")[1]))
+                    shift_end = str(datetime.timedelta(hours=int(avail_start_time.split(":")[0]),minutes=int(avail_start_time.split(":")[1])) + datetime.timedelta(hours=avg_hrs_per_shift))
+                    self.create_shift_gen(em_name,stored_days[i],shift_start,shift_end)
+
         
         # al_employee_av must be type LIST
-        # [[employee_name,employee_surname,"11:00-15:00","","","16:00-20:00","","",3]]
-        # 2D list
-        #  - each list will be data of an employee
-        #  - index 0 will be employee name and index 1 employee surname, index 2 the max shifts to generate for the employee, 
-        #    followed by indexes 3 to 8 which will be hours from monday to saturday
+        # [[eid,"11:00-15:00","","","16:00-20:00","","",3,5]]
+
         pass

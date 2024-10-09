@@ -135,7 +135,7 @@ class Database:
         con = sqlite3.connect(self.database)
         cursor = con.cursor()
         # carry on from here
-        result = [list(tup) for tup in cursor.execute("SELECT employee_id,day,start_time,end_time FROM shifts").fetchall()] # all employee data
+        result = [list(tup) for tup in cursor.execute("SELECT employee_id,day,start_time,end_time FROM shifts").fetchall()[0]] # all employee data
         
         days = ["mon","tue","wed","thu","fri","sat"]
         for_table = []
@@ -203,7 +203,7 @@ class Database:
                     shift_start = str(datetime.timedelta(hours=int(avail_start_time.split(":")[0]),minutes=int(avail_start_time.split(":")[1])))
                     shift_end = str(datetime.timedelta(hours=int(avail_start_time.split(":")[0]),minutes=int(avail_start_time.split(":")[1])) + datetime.timedelta(hours=avg_hrs_per_shift))
                     self.create_shift_gen(em_name,days[stored_days.index(stored_days[i])],shift_start,shift_end)
-
+                    stored_days[i] = "" #sets the day to be nothing in the list just so other shifts can be created properly
         
         # al_employee_av must be type LIST
         # [[eid,"11:00-15:00","","","16:00-20:00","","",3,5]]

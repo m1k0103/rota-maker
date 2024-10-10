@@ -142,7 +142,10 @@ class Database:
         
         for i in range(len(result)):
             namesurname = result[i][0] = " ".join(list(cursor.execute("SELECT name,surname FROM employees WHERE eid=?",[result[i][0]]).fetchall()[0]))
-            stored_day = date_to_week_day(result[i][1])
+            if len(result[i][1]) == 3:
+                stored_day = result[i][1]
+            else:
+                stored_day = date_to_week_day(result[i][1])
             timerange = result[i][2] = f"{result[i][2]}-{result[i][3]}"
         
             for_table.append([namesurname,"","","","","",""])
@@ -213,10 +216,14 @@ class Database:
                         self.create_shift_gen(em_name,days[stored_days.index(stored_days[i])],shift_start, str(datetime.datetime.strptime(shift_start, '%H:%M:%S')+remaining_shift_hours).split(" ")[1])
                         break # replace break with something else. like a jump statement???
                     elif remaining_shift_hours - shift_length < datetime.timedelta(hours=0,minutes=0,days=0):
-                        self.create_shift_gen(em_name,days[stored_days.index(stored_days[i])],shift_start,str(datetime.datetime.strptime(shift_end, '%H:%M:%S')+remaining_shift_hours))
+                        self.create_shift_gen(em_name,days[stored_days.index(stored_days[i])],shift_start,str(datetime.datetime.strptime(shift_end, '%H:%M:%S')+remaining_shift_hours).split(" ")[1])
                         remaining_shift_hours -= shift_length
                         continue
-                    
+                    elif remaining_shift_hours - shift_length > datetime.timedelta(hours=0,minutes=0,seconds=0):
+                        self.create_shift_gen(em_name,days[stored_days.index(stored_days[i])],shift_start,str(datetime.datetime.strptime(shift_start, '%H:%M:%S')+shift_length).split(" ")[1])
+                        remaining_shift_hours -= shift_length
+                        continue
+
                     #self.create_shift_gen(em_name,days[stored_days.index(stored_days[i])],shift_start,shift_end)
                     stored_days[i] = "" #sets the day to be nothing in the list just so other shifts can be created properly
         

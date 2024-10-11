@@ -146,17 +146,16 @@ class Database:
                 stored_day = result[i][1]
             else:
                 stored_day = date_to_week_day(result[i][1])
-            timerange = result[i][2] = f"{result[i][2]}-{result[i][3]}"
+            timerange = f"{result[i][2]}-{result[i][3]}"
         
             for_table.append([namesurname,"","","","","",""])
             if stored_day == '':
                 pass
             else:
-                for_table[i][days.index(stored_day)] = timerange
+                for_table[i][days.index(stored_day)+1] = timerange
         con.close()
         return for_table
-    # Make it so it reads the day from the stored value, then aligns it with the index a list so that
-    # it can be aligned with the table on the index.html page.
+
 
     def get_user_availability(self,name,surname):
         con = sqlite3.connect(self.database)
